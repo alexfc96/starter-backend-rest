@@ -24,9 +24,6 @@ mongoose
 		console.error(error);
 	});
 
-const authRouter = require('./routes/auth');
-const demoRouter = require('./routes/demo');
-
 const app = express();
 
 app.use(
@@ -56,6 +53,9 @@ app.use(
 	})
 );
 
+const authRouter = require('./routes/auth');
+const demoRouter = require('./routes/demo');
+
 app.use('/', authRouter);
 app.use('/protected', demoRouter);
 
@@ -72,6 +72,11 @@ app.use((req, res, next) => {
 // catch 409 and forward to error handler
 app.use((req, res, next) => {
 	res.status(409).json({ code: 'already exists' });
+});
+
+// catch 422 and forward to error handler
+app.use((req, res, next) => {
+	res.status(422).json({ code: 'user already exists' });
 });
 
 app.use((err, req, res, next) => {
